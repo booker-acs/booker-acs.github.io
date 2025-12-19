@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybersecurity Midterm Dashboard</title>
+    <!-- Tailwind CSS for Styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- JavaScript Logic (Defined before Alpine initializes) -->
+    <script>
+        function projectDashboard() {
+            return {
+                selectedTrack: null,
+                selectedModule: null,
+                
+                tracks: [
+                    { id: 'python', name: 'Python Pathway', env: 'VS Code Desktop', icon: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>' },
+                    { id: 'applab', name: 'JavaScript Pathway', env: 'Code.org AppLab', icon: '<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>' }
+                ],
+                
+                modules: [
+                    { 
+                        id: 'phish', title: 'Phishing Awareness', 
+                        icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                        req: "Implement a scenario-based training tool. Must include at least 3 'red flags' for users to identify.",
+                        success: "Program correctly validates user choices and explains the reasoning behind malicious markers."
+                    },
+                    { 
+                        id: 'crypto', title: 'Encryption Engine', 
+                        icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>',
+                        req: "Build a functional cipher (Caesar or Vigenère). Users must be able to input text and a secret key.",
+                        success: "Encryption and decryption cycles are mathematically consistent and handle special characters."
+                    },
+                    { 
+                        id: 'net', title: 'Network Defense', 
+                        icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>',
+                        req: "Simulate a firewall or packet filter. Must handle data objects with IP addresses and Port numbers.",
+                        success: "Successfully logs 'Permitted' vs 'Blocked' traffic based on a predefined security policy."
+                    },
+                    { 
+                        id: 'auth', title: 'Password Security', 
+                        icon: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>',
+                        req: "Create a strength analyzer. Use logic to check for length, variety, and entropy levels.",
+                        success: "Provides real-time feedback and estimates 'crack time' based on brute-force algorithms."
+                    }
+                ],
+
+                rubric: [
+                    { label: 'Functionality', pts: 25, d: 'No runtime errors, logic flow is intuitive.' },
+                    { label: 'Code Quality', pts: 25, d: 'Meaningful naming, comments, proper indentation.' },
+                    { label: 'Cyber Accuracy', pts: 25, d: 'Core principle is represented correctly.' },
+                    { label: 'Presentation', pts: 25, d: 'Visual polish, readability, and UI/UX design.' }
+                ],
+
+                get mission() {
+                    if (!this.selectedTrack || !this.selectedModule) return null;
+                    
+                    const combos = {
+                        'python-phish': { title: 'Project: Header-Hunter CLI', desc: 'Build a Python script that parses raw email headers. The program will quiz the user on identifying spoofed sender domains and malicious IP metadata in the terminal.' },
+                        'python-crypto': { title: 'Project: The Vault Script', desc: 'Create a robust Python utility that encrypts locally stored .txt files using a Vigenère cipher. Ensure the key is requested securely from the user.' },
+                        'python-net': { title: 'Project: PyWall Simulator', desc: 'A command-line tool that simulates a Network Intrusion Detection System (NIDS). It should read a "traffic log" and flag anomalous connection attempts.' },
+                        'python-auth': { title: 'Project: BitEntropy Calcs', desc: 'A Python-based calculator that converts passwords into their bit-entropy equivalents, comparing common passwords against a dictionary of leaks.' },
+                        'applab-phish': { title: 'Project: Inbox Defender App', desc: 'A mobile-style UI where users swipe through simulated emails. Use visual "glow" effects to highlight suspicious areas after a user makes a selection.' },
+                        'applab-crypto': { title: 'Project: Visual Cipher Wheel', desc: 'An interactive AppLab screen featuring a virtual "Enigma Wheel." As users type, they see the letter mapping shift visually on the screen.' },
+                        'applab-net': { title: 'Project: Packet-Path Game', desc: 'A drag-and-drop simulation. Users must categorize incoming data packets into "Safe" or "Sandbox" based on shifting security rules.' },
+                        'applab-auth': { title: 'Project: SecureKey Dashboard', desc: 'A modern UI dashboard with progress bars and color-coded strength meters. Includes a "Breach Check" simulation using simulated database blocks.' }
+                    };
+                    
+                    return combos[`${this.selectedTrack}-${this.selectedModule}`];
+                }
+            }
+        }
+    </script>
+
+    <!-- Alpine.js for Interactivity (Deferred to ensure DOM and logic are ready) -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        [x-cloak] { display: none !important; }
+        .bg-cyber-dark { background-color: #0f172a; }
+    </style>
+</head>
+<body class="bg-cyber-dark text-slate-100 p-4 md:p-8 selection:bg-blue-500/30">
+
+    <div x-data="projectDashboard()" x-cloak class="max-w-6xl mx-auto">
+        
+        <!-- Header Section -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+            <div>
+                <div class="flex items-center gap-2 text-blue-400 font-bold text-xs uppercase tracking-[0.2em] mb-2">
+                    <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Midterm Assignment
+                </div>
+                <h1 class="text-4xl font-black tracking-tight text-white flex items-center gap-3">
+                    MISSION DASHBOARD: <span class="text-blue-500">CYBERSECURITY</span>
+                </h1>
+                <p class="text-slate-400 mt-2 font-medium">11th Grade Applied Coding | Semester 1</p>
+            </div>
+            
+            <div class="flex gap-4 bg-slate-800/40 p-5 rounded-2xl border border-slate-700/50 backdrop-blur-sm">
+                <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div>
+                        <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Duration</div>
+                        <div class="text-sm font-bold">10 Days</div>
+                    </div>
+                </div>
+                <div class="w-px h-10 bg-slate-700"></div>
+                <div class="flex items-center gap-3">
+                    <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    <div>
+                        <div class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Weight</div>
+                        <div class="text-sm font-bold">Midterm Grade</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Column: Steps 1 & 2 -->
+            <div class="lg:col-span-8 space-y-10">
+                
+                <!-- STEP 1: TRACK SELECTION -->
+                <section>
+                    <h2 class="text-xs font-bold text-blue-500 uppercase tracking-[0.25em] mb-5 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-xs">01</span>
+                        SELECT DEVELOPMENT TRACK
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <template x-for="track in tracks" :key="track.id">
+                            <button 
+                                @click="selectedTrack = track.id"
+                                :class="selectedTrack === track.id ? 'border-blue-500 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.1)]' : 'border-slate-800 bg-slate-800/20 hover:border-slate-700'"
+                                class="relative p-6 rounded-2xl border-2 transition-all duration-300 text-left group overflow-hidden"
+                            >
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-700" :class="selectedTrack === track.id ? 'text-blue-400' : 'text-slate-500'">
+                                        <span x-html="track.icon"></span>
+                                    </div>
+                                    <template x-if="selectedTrack === track.id">
+                                        <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                                    </template>
+                                </div>
+                                <h3 class="text-xl font-black text-white" x-text="track.name"></h3>
+                                <p class="text-sm text-slate-400 font-medium" x-text="track.env"></p>
+                            </button>
+                        </template>
+                    </div>
+                </section>
+
+                <!-- STEP 2: MODULE SELECTION -->
+                <section>
+                    <h2 class="text-xs font-bold text-blue-500 uppercase tracking-[0.25em] mb-5 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-xs">02</span>
+                        CHOOSE CYBER MODULE
+                    </h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <template x-for="module in modules" :key="module.id">
+                            <div 
+                                @click="selectedModule = module.id"
+                                class="group relative h-48 rounded-2xl border-2 transition-all duration-300 cursor-pointer overflow-hidden"
+                                :class="selectedModule === module.id ? 'border-blue-500 bg-blue-500/10' : 'border-slate-800 bg-slate-800/20'"
+                            >
+                                <!-- Default View -->
+                                <div class="p-6 h-full flex flex-col justify-between transition-opacity duration-300" :class="selectedModule === module.id ? 'opacity-100' : 'group-hover:opacity-0'">
+                                    <div class="p-3 rounded-xl bg-slate-900 border border-slate-700 w-fit" :class="selectedModule === module.id ? 'text-blue-400' : 'text-slate-500'">
+                                        <span x-html="module.icon"></span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-xl font-black text-white leading-tight" x-text="module.title"></h3>
+                                        <p class="text-xs text-blue-500 font-bold uppercase tracking-widest mt-1">Core Focus Area</p>
+                                    </div>
+                                </div>
+
+                                <!-- Hover Overlay: Requirements -->
+                                <div class="absolute inset-0 p-6 bg-blue-600 transition-all duration-500 translate-y-full group-hover:translate-y-0 flex flex-col justify-center text-left">
+                                    <div class="flex items-center gap-2 text-white font-black text-xs uppercase tracking-tighter mb-4">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                        Technical Deep Dive
+                                    </div>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <div class="text-[10px] font-black text-blue-200 uppercase mb-1">Requirement</div>
+                                            <p class="text-xs leading-relaxed text-white font-medium" x-text="module.req"></p>
+                                        </div>
+                                        <div>
+                                            <div class="text-[10px] font-black text-blue-200 uppercase mb-1">Success Criteria</div>
+                                            <p class="text-xs leading-relaxed text-blue-50" x-text="module.success"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Mission Brief & Rubric -->
+            <div class="lg:col-span-4 space-y-6">
+                
+                <!-- DYNAMIC MISSION BRIEF -->
+                <div 
+                    class="p-8 rounded-[2rem] border-2 transition-all duration-700 min-h-[320px] flex flex-col relative overflow-hidden text-left"
+                    :class="mission ? 'border-blue-500 bg-blue-500/5 shadow-[0_0_40px_rgba(59,130,246,0.1)]' : 'border-slate-800 border-dashed bg-transparent text-slate-500'"
+                >
+                    <h3 class="text-[10px] font-bold uppercase tracking-[0.3em] mb-6 flex items-center gap-2">
+                        <svg class="w-4 h-4" :class="mission ? 'text-blue-500' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
+                        Assigned Mission
+                    </h3>
+                    
+                    <template x-if="mission">
+                        <div class="transition-all duration-500">
+                            <div class="mb-4">
+                                <span class="px-2 py-1 bg-blue-500 text-[10px] font-black text-white rounded uppercase tracking-tighter">Verified</span>
+                            </div>
+                            <h4 class="text-3xl font-black text-white mb-4 leading-tight" x-text="mission.title"></h4>
+                            <p class="text-slate-300 leading-relaxed text-sm font-medium" x-text="mission.desc"></p>
+                            <div class="mt-8 pt-6 border-t border-blue-500/20 flex items-center justify-between group cursor-default">
+                                <span class="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Awaiting Development</span>
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </div>
+                        </div>
+                    </template>
+
+                    <template x-if="!mission">
+                        <div class="my-auto text-center space-y-4">
+                            <div class="w-12 h-12 rounded-full border-4 border-slate-800 border-t-blue-500 animate-spin mx-auto opacity-20"></div>
+                            <p class="text-sm font-bold tracking-tight px-4 text-center">
+                                Select your track and specialization to generate mission parameters...
+                            </p>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- GRADING RUBRIC -->
+                <div class="p-8 bg-slate-800/30 rounded-[2rem] border border-slate-700/50 backdrop-blur-sm text-left">
+                    <h3 class="text-[10px] font-black uppercase tracking-[0.3em] mb-8 text-slate-500 flex items-center justify-between">
+                        Grading Schema <span>(100 PTS)</span>
+                    </h3>
+                    <div class="space-y-6">
+                        <template x-for="item in rubric" :key="item.label">
+                            <div class="flex gap-4 group">
+                                <div class="text-lg font-black text-blue-500/50 group-hover:text-blue-500 transition-colors" x-text="item.pts"></div>
+                                <div>
+                                    <div class="text-sm font-bold text-white mb-1 tracking-tight" x-text="item.label"></div>
+                                    <div class="text-[11px] text-slate-500 leading-snug font-medium uppercase tracking-tight" x-text="item.d"></div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="mt-10 p-4 bg-blue-500/5 rounded-xl border border-blue-500/10 text-center">
+                        <span class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] block mb-1 text-center">Project Milestone</span>
+                        <span class="text-sm font-black text-blue-400 text-center">MIDTERM WEIGHTED</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-16 pb-12 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold text-slate-600 uppercase tracking-widest border-t border-slate-800/50 pt-8">
+            <div class="flex items-center gap-6">
+                <span class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span> Connection Secure</span>
+                <span>System: Encrypted_HTML_Local</span>
+            </div>
+            <div class="flex items-center gap-6">
+                <span x-text="selectedTrack ? `Track: ${selectedTrack.toUpperCase()}` : 'No Track Selected'"></span>
+                <span>© 2024 Cybersecurity Education</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
